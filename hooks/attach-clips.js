@@ -58,7 +58,15 @@ process.stdin.on("end", () => {
     } catch {}
     const reply = command(prompt);
     if (reply !== null) {
-      process.stdout.write(JSON.stringify({ decision: "block", reason: reply }));
+      // Blocking is the only way for a hook to answer without the model, so Claude Code
+      // labels it "blocked by hook". suppressOriginalPrompt at least drops the echoed prompt.
+      process.stdout.write(
+        JSON.stringify({
+          decision: "block",
+          reason: reply,
+          hookSpecificOutput: { hookEventName: "UserPromptSubmit", suppressOriginalPrompt: true },
+        })
+      );
       return process.exit(0);
     }
 

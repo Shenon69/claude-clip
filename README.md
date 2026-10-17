@@ -31,7 +31,7 @@ If you run Claude Code with a custom `CLAUDE_CONFIG_DIR`, run the installer with
 - **Attach:** type your prompt in Claude Code as usual. Queued clips are included and the queue clears.
 - **Manage from Claude Code:** `/clips` lists queued clips, `/clips clear` empties the queue and `/clips drop 2` removes one. These are handled by the hook, so they never reach the model or use tokens.
 
-Clips older than 4 hours are dropped instead of attached. Change this with `CLAUDE_CLIP_TTL_HOURS`. Attached clips are logged to `~/.claude-inbox/history.jsonl`.
+Clips older than 4 hours are dropped instead of attached. Change this with `CLAUDE_CLIP_TTL_HOURS`. No history is kept: once a clip is attached, cleared, dropped or expired, it's deleted from disk.
 
 To change the shortcut, go to `chrome://extensions/shortcuts`.
 
