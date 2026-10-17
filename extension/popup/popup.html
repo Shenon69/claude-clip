@@ -1,0 +1,18 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Queued for Claude Code</h1>
+      <button id="clear" class="link" hidden>Clear all</button>
+    </header>
+    <p class="hint">These attach to the next prompt you send in Claude Code.</p>
+    <p id="error" class="error" hidden></p>
+    <ul id="clips"></ul>
+    <p id="empty" class="empty" hidden>Nothing queued. Select text on any page and press <kbd>⌥⇧C</kbd>.</p>
+    <script src="popup.js"></script>
+  </body>
+</html>

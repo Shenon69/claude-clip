@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "Claude Clip",
+  "version": "0.1.0",
+  "description": "Queue text from any page so it attaches to your next Claude Code prompt.",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxihlci+vr8vpxt4SL7ot2kCuyYSTe+PYmrH1joutK3PLXw/DsE5+COBJKsF+oYs16l8jOirmZL1dkid2zrRS6FkMNESjcBisRBZ0hegNBaqGu1zh6KgkUPewUt2V1KMTX2dRkgMCbn5SUwLNhoxkeYEutvbXGevFXGAzF+C5ZQpFYyBApA8ZaXoxPLzMNqJLrdTkB0qbYCjKufB9yfCmO5vlgjECWrXDoklKHlFJQbO7Pu3ifadHfxUtq9cTW6LAcjUOLt9vWfGCovlUBnvr2aakh7FHMKbOm4CyedIojjCkXv1RNoE658p7DODMjtOX0IDKtF01bFJw1x6RlPMnSwIDAQAB",
+  "permissions": [
+    "contextMenus",
+    "nativeMessaging",
+    "scripting",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Claude Clip",
+    "default_popup": "popup/popup.html"
+  },
+  "commands": {
+    "send-selection": {
+      "suggested_key": {
+        "default": "Alt+Shift+C",
+        "mac": "Alt+Shift+C"
+      },
+      "description": "Send selected text to Claude Code"
+    }
+  }
+}
