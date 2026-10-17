@@ -15,6 +15,10 @@ if [ -z "$NODE" ]; then
   exit 1
 fi
 
+# Update Claude Code's settings first: if settings.json is invalid this stops
+# before anything else is installed.
+"$NODE" "$ROOT/lib/configure.js" install "$NODE"
+
 cat > "$ROOT/host/run-host.sh" <<EOF
 #!/bin/bash
 exec "$NODE" "$ROOT/host/host.js"
@@ -32,8 +36,6 @@ cat > "$HOSTS_DIR/$HOST_NAME.json" <<EOF
 }
 EOF
 echo "✓ Registered Chrome native host ($HOSTS_DIR/$HOST_NAME.json)"
-
-"$NODE" "$ROOT/lib/configure.js" install "$NODE"
 
 cat <<EOF
 
