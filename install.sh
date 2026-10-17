@@ -1,47 +1,37 @@
 #!/bin/bash
-# Installs Claude Clip: the Chrome native messaging host, plus the Claude Code
-# prompt hook and status line. Safe to run again.
+# Installs Claude Clip: the native messaging host for every installed
+# Chromium-based browser, plus the Claude Code prompt hook and status line.
+# Works on macOS, Linux and Windows (run it from Git Bash). Safe to run again.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
-EXTENSION_ID="emifkioohjimifiidbhnbafokoaecppe"   # fixed by the "key" in extension/manifest.json
-HOST_NAME="com.claude.clip"
-HOSTS_DIR="$HOME/Library/Application Support/Google/Chrome/NativeMessagingHosts"
 
-# Chrome starts the host without your shell profile (so no nvm), so pin node's full path.
+# Browsers start the host without your shell profile (so no nvm), so pin node's full path.
 NODE="$(command -v node || true)"
 if [ -z "$NODE" ]; then
   echo "node not found on PATH" >&2
   exit 1
 fi
 
+# In Git Bash, hand node Windows-style paths (C:/...) instead of /c/...
+case "$(uname -s)" in
+  MINGW* | MSYS* | CYGWIN*)
+    NODE="$(cygpath -m "$NODE")"
+    if [ -n "${CLAUDE_CONFIG_DIR:-}" ]; then export CLAUDE_CONFIG_DIR="$(cygpath -m "$CLAUDE_CONFIG_DIR")"; fi
+    ;;
+esac
+
 # Update Claude Code's settings first: if settings.json is invalid this stops
 # before anything else is installed.
 "$NODE" "$ROOT/lib/configure.js" install "$NODE"
-
-cat > "$ROOT/host/run-host.sh" <<EOF
-#!/bin/bash
-exec "$NODE" "$ROOT/host/host.js"
-EOF
-chmod +x "$ROOT/host/run-host.sh"
-
-mkdir -p "$HOSTS_DIR"
-cat > "$HOSTS_DIR/$HOST_NAME.json" <<EOF
-{
-  "name": "$HOST_NAME",
-  "description": "Claude Clip queue",
-  "path": "$ROOT/host/run-host.sh",
-  "type": "stdio",
-  "allowed_origins": ["chrome-extension://$EXTENSION_ID/"]
-}
-EOF
-echo "✓ Registered Chrome native host ($HOSTS_DIR/$HOST_NAME.json)"
+"$NODE" "$ROOT/lib/browsers.js" install "$NODE"
 
 cat <<EOF
 
 Next steps:
-  1. Open chrome://extensions, turn on Developer mode, click "Load unpacked"
+  1. Open your browser's extensions page (chrome://extensions, edge://extensions,
+     brave://extensions, ...), turn on Developer mode, click "Load unpacked"
      and choose: $ROOT/extension
   2. Restart any running Claude Code sessions so they pick up the hook.
-  3. Select text on any page and press ⌥⇧C (Alt+Shift+C).
+  3. Select text on any page and press Alt+Shift+C (⌥⇧C on a Mac).
 EOF

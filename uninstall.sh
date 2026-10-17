@@ -1,5 +1,5 @@
 #!/bin/bash
-# Removes the native host registration and the Claude Code hook/status line.
+# Removes the native host from every browser and the Claude Code hook/status line.
 # Queued clips in ~/.claude-inbox are left in place.
 set -euo pipefail
 
@@ -13,9 +13,14 @@ if [ -z "$NODE" ]; then
   exit 1
 fi
 
+case "$(uname -s)" in
+  MINGW* | MSYS* | CYGWIN*)
+    NODE="$(cygpath -m "$NODE")"
+    if [ -n "${CLAUDE_CONFIG_DIR:-}" ]; then export CLAUDE_CONFIG_DIR="$(cygpath -m "$CLAUDE_CONFIG_DIR")"; fi
+    ;;
+esac
+
 # Settings first: if settings.json is invalid this stops before removing anything.
 "$NODE" "$ROOT/lib/configure.js" uninstall
-rm -f "$HOME/Library/Application Support/Google/Chrome/NativeMessagingHosts/com.claude.clip.json"
-rm -f "$ROOT/host/run-host.sh"
-echo "✓ Removed Chrome native host"
-echo "Remove the extension from chrome://extensions to finish."
+"$NODE" "$ROOT/lib/browsers.js" uninstall
+echo "Remove the extension from your browser's extensions page to finish."

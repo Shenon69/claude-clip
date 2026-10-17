@@ -60,5 +60,9 @@ async function load() {
   }
 }
 
+if (!/mac/i.test(navigator.userAgentData?.platform ?? navigator.platform)) {
+  document.getElementById("shortcut").textContent = "Alt+Shift+C";
+}
+
 clearBtn.onclick = () => callHost({ action: "clear" }).then(load, showError);
 load();
