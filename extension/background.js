@@ -58,8 +58,10 @@ async function sendSelection(tab, preferredFrameId) {
   // Prefer the tab's URL and title: an iframe's own are less useful.
   const clip = { ...hit.result, url: tab.url || hit.result.url, title: tab.title || hit.result.title };
   try {
-    const { count } = await callHost({ action: "add", clip });
-    toast(tab.id, `📎 Queued for Claude Code (${count} waiting)`);
+    const { count, clip: saved } = await callHost({ action: "add", clip });
+    // The host keeps at most 20,000 characters of a clip.
+    const cut = saved.text.length < clip.text.length ? `. Only the first ${saved.text.length.toLocaleString()} characters were kept` : "";
+    toast(tab.id, `📎 Queued for Claude Code (${count} waiting)${cut}`);
   } catch (err) {
     const missing = /native messaging host not found/i.test(err.message);
     toast(tab.id, missing ? "Claude Clip host not installed. Run install.sh" : `Claude Clip: ${err.message}`, false);

@@ -17,8 +17,9 @@ process.stdin.on("end", () => {
 
   const clips = queue.read();
   if (clips.length > 0) {
-    const preview = clips[clips.length - 1].text.replace(/\s+/g, " ").slice(0, 40);
-    parts.push(`\x1b[33m📎 ${clips.length} clip${clips.length === 1 ? "" : "s"} queued\x1b[0m \x1b[2m"${preview}…"\x1b[0m`);
+    const text = clips[clips.length - 1].text.replace(/\s+/g, " ");
+    const preview = text.length > 40 ? `${text.slice(0, 40)}…` : text;
+    parts.push(`\x1b[33m📎 ${clips.length} clip${clips.length === 1 ? "" : "s"} queued\x1b[0m \x1b[2m"${preview}"\x1b[0m`);
   }
   process.stdout.write(parts.join(" · "));
 });

@@ -5,6 +5,8 @@
 
   function selectedText() {
     const el = document.activeElement;
+    // Never capture from a password field, even if text in it is selected.
+    if (el && el.tagName === "INPUT" && el.type === "password") return "";
     if (el && (el.tagName === "TEXTAREA" || el.tagName === "INPUT") && typeof el.selectionStart === "number") {
       const text = el.value.slice(el.selectionStart, el.selectionEnd);
       if (text.trim()) return text;

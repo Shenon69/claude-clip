@@ -28,9 +28,10 @@ function list(clips) {
 
 // Returns the message to show for a /clips command, or null if the prompt isn't one.
 function command(prompt) {
-  const match = prompt.trim().match(/^\/clips(?:\s+(\S+)(?:\s+(\S+))?)?\s*$/);
+  const match = prompt.trim().match(/^\/clips(?:\s+([\s\S]*))?$/);
   if (!match) return null;
-  const [, sub = "list", arg] = match;
+  const [sub = "list", arg, ...extra] = (match[1] || "").split(/\s+/).filter(Boolean);
+  if (extra.length > 0) return "Usage: /clips, /clips clear, /clips drop <n>";
   const clips = queue.read();
   if (sub === "list") return list(clips);
   if (sub === "clear") {
